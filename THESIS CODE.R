@@ -644,6 +644,56 @@ print(tw_o_summary)
 print(tw_fe_summary)
 print(tw_si_summary)
 
+library(car)
+library(lmtest)
+library(ggplot2)
 
+check_regression_assumptions <- function(model, model_name) {
+par(mfrow = c(2, 2))  
+  
+# Check for normality of residuals
+qqnorm(residuals(model), main = paste("Q-Q Plot for", model_name))
+qqline(residuals(model), col = "red")
+shapiro_test <- shapiro.test(residuals(model))
+cat(paste("Shapiro-Wilk Test p-value for", model_name, ":", shapiro_test$p.value, "\n"))
+  
+# Check for homoscedasticity
+plot(model$fitted.values, residuals(model), 
+       main = paste("Residuals vs Fitted for", model_name), 
+       xlab = "Fitted values", 
+       ylab = "Residuals")
+  abline(h = 0, col = "red")
+  bp_test <- bptest(model)
+  cat(paste("Breusch-Pagan Test p-value for", model_name, ":", bp_test$p.value, "\n"))
+  
+# Durbin-Watson 
+dw_test <- dwtest(model)
+cat(paste("Durbin-Watson Test p-value for", model_name, ":", dw_test$p.value, "\n"))
+  
+ # VIF
+vif_values <- vif(model)
+cat(paste("VIF values for", model_name, ":\n"))
+print(vif_values)
+  
+par(mfrow = c(1, 1))  
+}
+
+cat("CR O% Model:\n")
+check_regression_assumptions(cr_o_model, "CR O% Model")
+
+cat("\nCR Fe% Model:\n")
+check_regression_assumptions(cr_fe_model, "CR Fe% Model")
+
+cat("\nCR Si% Model:\n")
+check_regression_assumptions(cr_si_model, "CR Si% Model")
+
+cat("\nTW O% Model:\n")
+check_regression_assumptions(tw_o_model, "TW O% Model")
+
+cat("\nTW Fe% Model:\n")
+check_regression_assumptions(tw_fe_model, "TW Fe% Model")
+
+cat("\nTW Si% Model:\n")
+check_regression_assumptions(tw_si_model, "TW Si% Model")
 
 
