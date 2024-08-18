@@ -93,7 +93,7 @@ colors <- c("red", "orange", "gold", "green", "blue", "purple", "turquoise", "ma
 
 # draw the plots
 p2 <- ggplot(data_summary, aes(x = Day, y = Mean, group = Variable, color = Variable)) +
-  geom_point() +  # 添加点
+  geom_point() +  
   geom_line(linetype = "dashed") +  
   facet_wrap(~Category, scales = "free_y", ncol = 1) +
   scale_color_manual(values = setNames(colors, levels(data_long$Variable))) +
